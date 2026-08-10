@@ -1,0 +1,20 @@
+{
+  "name": "com.ugt.unitween",
+  "version": "0.1.0",
+  "displayName": "UGT.UniTween",
+  "description": "双模驱动的 Unity 动画插件包，支持纯代码 API 与可视化组件编排动画序列。",
+  "unity": "2020.3",
+  "unityRelease": "0f1",
+  "keywords": [
+    "Unity",
+    "Animation",
+    "Tween",
+    "Easing"
+  ],
+  "author": {
+    "name": "Noah",
+    "email": "noah-zhou@qq.com",
+    "url": "https://github.com/noah-zll?tab=repositories"
+  },
+  "dependencies": {}
+}
