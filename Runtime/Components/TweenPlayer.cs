@@ -295,19 +295,20 @@ namespace UGT.UniTween.Components
             Vector3 to = clip.ToValue;
             if (clip.ValueMode == TweenValueMode.Relative)
             {
+                Vector3 positionBase = clip.UseLocal ? target.localPosition : target.position;
                 switch (clip.PropertyType)
                 {
                     case TweenPropertyType.Position:
-                        to = target.position + (Vector3)clip.ToValue;
+                        to = positionBase + (Vector3)clip.ToValue;
                         break;
                     case TweenPropertyType.PositionX:
-                        to.x = target.position.x + clip.ToValue.x;
+                        to.x = positionBase.x + clip.ToValue.x;
                         break;
                     case TweenPropertyType.PositionY:
-                        to.y = target.position.y + clip.ToValue.y;
+                        to.y = positionBase.y + clip.ToValue.y;
                         break;
                     case TweenPropertyType.PositionZ:
-                        to.z = target.position.z + clip.ToValue.z;
+                        to.z = positionBase.z + clip.ToValue.z;
                         break;
                     case TweenPropertyType.Scale:
                         to = target.localScale + (Vector3)clip.ToValue;
@@ -329,16 +330,16 @@ namespace UGT.UniTween.Components
 
             switch (clip.PropertyType)
             {
-                case TweenPropertyType.Position: return target.DoMove(to, duration);
-                case TweenPropertyType.PositionX: return target.DoMoveX(to.x, duration);
-                case TweenPropertyType.PositionY: return target.DoMoveY(to.y, duration);
-                case TweenPropertyType.PositionZ: return target.DoMoveZ(to.z, duration);
+                case TweenPropertyType.Position: return clip.UseLocal ? target.DoLocalMove(to, duration) : target.DoMove(to, duration);
+                case TweenPropertyType.PositionX: return clip.UseLocal ? target.DoLocalMoveX(to.x, duration) : target.DoMoveX(to.x, duration);
+                case TweenPropertyType.PositionY: return clip.UseLocal ? target.DoLocalMoveY(to.y, duration) : target.DoMoveY(to.y, duration);
+                case TweenPropertyType.PositionZ: return clip.UseLocal ? target.DoLocalMoveZ(to.z, duration) : target.DoMoveZ(to.z, duration);
                 case TweenPropertyType.Rotation: return target.DoRotate(to, duration);
                 case TweenPropertyType.Scale: return target.DoScale(to, duration);
                 case TweenPropertyType.ScaleX: return target.DoScaleX(to.x, duration);
                 case TweenPropertyType.ScaleY: return target.DoScaleY(to.y, duration);
                 case TweenPropertyType.ScaleZ: return target.DoScaleZ(to.z, duration);
-                case TweenPropertyType.Path: return target.DoPath(clip.PathPoints, duration, clip.UseLocalPath);
+                case TweenPropertyType.Path: return target.DoPath(clip.PathPoints, duration, clip.UseLocal);
             }
 
             return null;
@@ -546,10 +547,30 @@ namespace UGT.UniTween.Components
             if (target == null) return;
             switch (clip.PropertyType)
             {
-                case TweenPropertyType.Position: target.position = f; break;
-                case TweenPropertyType.PositionX: { var p = target.position; p.x = f.x; target.position = p; } break;
-                case TweenPropertyType.PositionY: { var p = target.position; p.y = f.y; target.position = p; } break;
-                case TweenPropertyType.PositionZ: { var p = target.position; p.z = f.z; target.position = p; } break;
+                case TweenPropertyType.Position:
+                    if (clip.UseLocal) target.localPosition = f; else target.position = f;
+                    break;
+                case TweenPropertyType.PositionX:
+                    {
+                        var p = clip.UseLocal ? target.localPosition : target.position;
+                        p.x = f.x;
+                        if (clip.UseLocal) target.localPosition = p; else target.position = p;
+                    }
+                    break;
+                case TweenPropertyType.PositionY:
+                    {
+                        var p = clip.UseLocal ? target.localPosition : target.position;
+                        p.y = f.y;
+                        if (clip.UseLocal) target.localPosition = p; else target.position = p;
+                    }
+                    break;
+                case TweenPropertyType.PositionZ:
+                    {
+                        var p = clip.UseLocal ? target.localPosition : target.position;
+                        p.z = f.z;
+                        if (clip.UseLocal) target.localPosition = p; else target.position = p;
+                    }
+                    break;
                 case TweenPropertyType.Rotation: target.eulerAngles = f; break;
                 case TweenPropertyType.Scale: target.localScale = f; break;
                 case TweenPropertyType.ScaleX: { var s = target.localScale; s.x = f.x; target.localScale = s; } break;

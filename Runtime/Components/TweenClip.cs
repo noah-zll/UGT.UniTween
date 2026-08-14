@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace UGT.UniTween.Components
 {
@@ -42,6 +43,10 @@ namespace UGT.UniTween.Components
         [Tooltip("是否指定起始值")]
         public bool UseFrom;
 
+        [Tooltip("使用局部坐标（Position 系列 / Path 时使用）")]
+        [FormerlySerializedAs("UseLocalPath")]
+        public bool UseLocal = true;
+
         [Tooltip("是否使用独立时间缩放")]
         public bool CustomTimeScale;
 
@@ -59,9 +64,6 @@ namespace UGT.UniTween.Components
 
         [Tooltip("路径点列表（Path 时使用）")]
         public Vector3[] PathPoints;
-
-        [Tooltip("路径使用局部坐标（Path 时使用）")]
-        public bool UseLocalPath;
 
         public override string ToString()
         {

@@ -162,7 +162,7 @@ namespace UGT.UniTween.Editor
                     if (propType != TweenPropertyType.Path) continue;
 
                     var pathPointsProp = clip.FindPropertyRelative("PathPoints");
-                    bool useLocal = clip.FindPropertyRelative("UseLocalPath").boolValue;
+                    bool useLocal = clip.FindPropertyRelative("UseLocal").boolValue;
                     DrawPath(pathPointsProp, target, useLocal);
                 }
             }

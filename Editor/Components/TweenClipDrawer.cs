@@ -44,6 +44,7 @@ namespace UGT.UniTween.Editor
             if (needsValueMode) lines++;
             if (!isBool && !isSpriteSeq && !isPath) lines++; // From 行
             if (isPath) lines++; // World/Local 开关行
+            if (IsPositionType(propType)) lines++; // Position World/Local 开关行
             if (showCurve) lines++;
 
             return (lineH + gap) * (lines + 1) + extraHeight;
@@ -87,7 +88,7 @@ namespace UGT.UniTween.Editor
             var pathPointsProp = property.FindPropertyRelative("PathPoints");
             var customTimeScaleProp = property.FindPropertyRelative("CustomTimeScale");
             var timeScaleProp = property.FindPropertyRelative("TimeScale");
-            var useLocalPathProp = property.FindPropertyRelative("UseLocalPath");
+            var useLocalProp = property.FindPropertyRelative("UseLocal");
 
             float halfW = (w - gap) * 0.5f;
             TweenPropertyType propType = (TweenPropertyType)propertyTypeProp.enumValueIndex;
@@ -149,6 +150,15 @@ namespace UGT.UniTween.Editor
                 y += lineH + gap;
             }
 
+            // Row 9: Position World/Local 开关
+            if (IsPositionType(propType))
+            {
+                float labelW = EditorGUIUtility.labelWidth;
+                EditorGUI.LabelField(MakeRect(x, y, labelW, lineH), "Local Space");
+                useLocalProp.boolValue = EditorGUI.Toggle(MakeRect(x + labelW, y, 20f, lineH), useLocalProp.boolValue);
+                y += lineH + gap;
+            }
+
             if (isSpriteSeq)
             {
                 // SpriteSequence 专用：FPS + SpriteFrames 列表
@@ -165,7 +175,7 @@ namespace UGT.UniTween.Editor
                 // World/Local 空间模式开关（放在路径点列表上方）
                 float labelW = EditorGUIUtility.labelWidth;
                 EditorGUI.LabelField(MakeRect(x, y, labelW, lineH), "Local Space");
-                useLocalPathProp.boolValue = EditorGUI.Toggle(MakeRect(x + labelW, y, 20f, lineH), useLocalPathProp.boolValue);
+                useLocalProp.boolValue = EditorGUI.Toggle(MakeRect(x + labelW, y, 20f, lineH), useLocalProp.boolValue);
                 y += lineH + gap;
 
                 // Path 专用：路径点列表
@@ -264,6 +274,14 @@ namespace UGT.UniTween.Editor
         private static bool IsBoolType(TweenPropertyType type)
         {
             return type == TweenPropertyType.FlipX || type == TweenPropertyType.FlipY;
+        }
+
+        private static bool IsPositionType(TweenPropertyType type)
+        {
+            return type == TweenPropertyType.Position ||
+                   type == TweenPropertyType.PositionX ||
+                   type == TweenPropertyType.PositionY ||
+                   type == TweenPropertyType.PositionZ;
         }
 
         private static bool NeedsValueMode(TweenPropertyType type)
