@@ -57,6 +57,12 @@ namespace UGT.UniTween.Components
         [Tooltip("序列帧精灵列表（SpriteSequence 时使用）")]
         public Sprite[] SpriteFrames;
 
+        [Tooltip("路径点列表（Path 时使用）")]
+        public Vector3[] PathPoints;
+
+        [Tooltip("路径使用局部坐标（Path 时使用）")]
+        public bool UseLocalPath;
+
         public override string ToString()
         {
             return string.IsNullOrEmpty(ClipName) ? $"{PropertyType} ({Duration}s)" : ClipName;

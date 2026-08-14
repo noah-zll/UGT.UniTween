@@ -338,6 +338,7 @@ namespace UGT.UniTween.Components
                 case TweenPropertyType.ScaleX: return target.DoScaleX(to.x, duration);
                 case TweenPropertyType.ScaleY: return target.DoScaleY(to.y, duration);
                 case TweenPropertyType.ScaleZ: return target.DoScaleZ(to.z, duration);
+                case TweenPropertyType.Path: return target.DoPath(clip.PathPoints, duration, clip.UseLocalPath);
             }
 
             return null;

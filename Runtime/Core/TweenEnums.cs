@@ -34,6 +34,7 @@ namespace UGT.UniTween
         Position, PositionX, PositionY, PositionZ,
         Rotation, RotationX, RotationY, RotationZ,
         Scale, ScaleX, ScaleY, ScaleZ,
+        Path,
         // RectTransform
         AnchorPosition, AnchorMin, AnchorMax,
         SizeDelta, Pivot,

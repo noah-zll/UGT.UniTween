@@ -287,5 +287,56 @@ namespace UGT.UniTween.Plugins
 
             return tween;
         }
+
+        public static Tween DoPath(this Transform target, Vector3[] points, float duration, bool useLocal = false)
+        {
+            if (points == null || points.Length < 2) return null;
+
+            var tween = TweenEngine.Instance.GetTween();
+            tween.Duration = duration;
+
+            tween.OnUpdate = (t) =>
+            {
+                if (target == null) return;
+                var p = EvaluateCatmullRomPath(points, t);
+                if (useLocal)
+                    target.localPosition = p;
+                else
+                    target.position = p;
+            };
+
+            return tween;
+        }
+
+        private static Vector3 EvaluateCatmullRomPath(Vector3[] points, float t)
+        {
+            int n = points.Length;
+            if (n == 1) return points[0];
+            if (n == 2) return Vector3.Lerp(points[0], points[1], t);
+
+            int segmentCount = n - 1;
+            float seg = Mathf.Clamp01(t) * segmentCount;
+            int segIndex = Mathf.Min((int)seg, segmentCount - 1);
+            float localT = seg - segIndex;
+
+            Vector3 p0 = points[Mathf.Max(segIndex - 1, 0)];
+            Vector3 p1 = points[segIndex];
+            Vector3 p2 = points[segIndex + 1];
+            Vector3 p3 = points[Mathf.Min(segIndex + 2, n - 1)];
+
+            return CatmullRom(p0, p1, p2, p3, localT);
+        }
+
+        private static Vector3 CatmullRom(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t)
+        {
+            float t2 = t * t;
+            float t3 = t2 * t;
+            return 0.5f * (
+                2f * p1 +
+                (-p0 + p2) * t +
+                (2f * p0 - 5f * p1 + 4f * p2 - p3) * t2 +
+                (-p0 + 3f * p1 - 3f * p2 + p3) * t3
+            );
+        }
     }
 }

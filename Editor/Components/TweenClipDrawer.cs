@@ -22,6 +22,7 @@ namespace UGT.UniTween.Editor
             TweenPropertyType propType = (TweenPropertyType)property.FindPropertyRelative("PropertyType").enumValueIndex;
             bool showCurve = property.FindPropertyRelative("Ease").enumValueIndex == (int)EaseType.Custom;
             bool isSpriteSeq = propType == TweenPropertyType.SpriteSequence;
+            bool isPath = propType == TweenPropertyType.Path;
             bool isBool = IsBoolType(propType);
             bool needsValueMode = NeedsValueMode(propType);
 
@@ -32,11 +33,17 @@ namespace UGT.UniTween.Editor
                 var spriteFramesProp = property.FindPropertyRelative("SpriteFrames");
                 extraHeight = EditorGUI.GetPropertyHeight(spriteFramesProp, true) + gap;
             }
+            else if (isPath)
+            {
+                var pathPointsProp = property.FindPropertyRelative("PathPoints");
+                extraHeight = EditorGUI.GetPropertyHeight(pathPointsProp, true) + gap;
+            }
 
             int lines = 7; // 基础行
             lines++; // TimeScale 行
             if (needsValueMode) lines++;
-            if (!isBool && !isSpriteSeq) lines++; // From 行
+            if (!isBool && !isSpriteSeq && !isPath) lines++; // From 行
+            if (isPath) lines++; // World/Local 开关行
             if (showCurve) lines++;
 
             return (lineH + gap) * (lines + 1) + extraHeight;
@@ -77,12 +84,15 @@ namespace UGT.UniTween.Editor
             var toValueProp = property.FindPropertyRelative("ToValue");
             var customCurveProp = property.FindPropertyRelative("CustomCurve");
             var spriteFramesProp = property.FindPropertyRelative("SpriteFrames");
+            var pathPointsProp = property.FindPropertyRelative("PathPoints");
             var customTimeScaleProp = property.FindPropertyRelative("CustomTimeScale");
             var timeScaleProp = property.FindPropertyRelative("TimeScale");
+            var useLocalPathProp = property.FindPropertyRelative("UseLocalPath");
 
             float halfW = (w - gap) * 0.5f;
             TweenPropertyType propType = (TweenPropertyType)propertyTypeProp.enumValueIndex;
             bool isSpriteSeq = propType == TweenPropertyType.SpriteSequence;
+            bool isPath = propType == TweenPropertyType.Path;
 
             // Row 1: ClipName
             EditorGUI.PropertyField(MakeRect(x, y, w, lineH), clipNameProp, new GUIContent("Name"));
@@ -129,6 +139,7 @@ namespace UGT.UniTween.Editor
             DrawFilteredPropertyType(propType, targetType, propertyTypeProp, MakeRect(x, y, w, lineH));
             propType = (TweenPropertyType)propertyTypeProp.enumValueIndex;
             isSpriteSeq = propType == TweenPropertyType.SpriteSequence;
+            isPath = propType == TweenPropertyType.Path;
             y += lineH + gap;
 
             // Row 8: ValueMode（SpriteSequence / Color / Bool 不需要）
@@ -148,6 +159,18 @@ namespace UGT.UniTween.Editor
 
                 float framesHeight = EditorGUI.GetPropertyHeight(spriteFramesProp, true);
                 EditorGUI.PropertyField(MakeRect(x, y, w, framesHeight), spriteFramesProp, new GUIContent("Sprite Frames"), true);
+            }
+            else if (isPath)
+            {
+                // World/Local 空间模式开关（放在路径点列表上方）
+                float labelW = EditorGUIUtility.labelWidth;
+                EditorGUI.LabelField(MakeRect(x, y, labelW, lineH), "Local Space");
+                useLocalPathProp.boolValue = EditorGUI.Toggle(MakeRect(x + labelW, y, 20f, lineH), useLocalPathProp.boolValue);
+                y += lineH + gap;
+
+                // Path 专用：路径点列表
+                float pathHeight = EditorGUI.GetPropertyHeight(pathPointsProp, true);
+                EditorGUI.PropertyField(MakeRect(x, y, w, pathHeight), pathPointsProp, new GUIContent("Path Points"), true);
             }
             else
             {
@@ -190,7 +213,8 @@ namespace UGT.UniTween.Editor
         {
             // Transform
             new[] { TweenPropertyType.Position, TweenPropertyType.PositionX, TweenPropertyType.PositionY, TweenPropertyType.PositionZ,
-                    TweenPropertyType.Rotation, TweenPropertyType.Scale, TweenPropertyType.ScaleX, TweenPropertyType.ScaleY, TweenPropertyType.ScaleZ },
+                    TweenPropertyType.Rotation, TweenPropertyType.Scale, TweenPropertyType.ScaleX, TweenPropertyType.ScaleY, TweenPropertyType.ScaleZ,
+                    TweenPropertyType.Path },
             // RectTransform
             new[] { TweenPropertyType.AnchorPosition, TweenPropertyType.AnchorMin, TweenPropertyType.AnchorMax,
                     TweenPropertyType.SizeDelta, TweenPropertyType.Pivot },
@@ -245,7 +269,7 @@ namespace UGT.UniTween.Editor
         private static bool NeedsValueMode(TweenPropertyType type)
         {
             if (type == TweenPropertyType.Color || type == TweenPropertyType.SpriteColor) return false;
-            if (type == TweenPropertyType.SpriteSequence) return false;
+            if (type == TweenPropertyType.SpriteSequence || type == TweenPropertyType.Path) return false;
             return !IsBoolType(type);
         }
 
