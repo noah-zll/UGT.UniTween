@@ -88,7 +88,7 @@ namespace UGT.UniTween.Editor
             var pathPointsProp = property.FindPropertyRelative("PathPoints");
             var customTimeScaleProp = property.FindPropertyRelative("CustomTimeScale");
             var timeScaleProp = property.FindPropertyRelative("TimeScale");
-            var useLocalProp = property.FindPropertyRelative("UseLocal");
+            var useWorldProp = property.FindPropertyRelative("UseWorld");
 
             float halfW = (w - gap) * 0.5f;
             TweenPropertyType propType = (TweenPropertyType)propertyTypeProp.enumValueIndex;
@@ -154,8 +154,8 @@ namespace UGT.UniTween.Editor
             if (IsPositionType(propType))
             {
                 float labelW = EditorGUIUtility.labelWidth;
-                EditorGUI.LabelField(MakeRect(x, y, labelW, lineH), "Local Space");
-                useLocalProp.boolValue = EditorGUI.Toggle(MakeRect(x + labelW, y, 20f, lineH), useLocalProp.boolValue);
+                EditorGUI.LabelField(MakeRect(x, y, labelW, lineH), "World Space");
+                useWorldProp.boolValue = EditorGUI.Toggle(MakeRect(x + labelW, y, 20f, lineH), useWorldProp.boolValue);
                 y += lineH + gap;
             }
 
@@ -174,8 +174,8 @@ namespace UGT.UniTween.Editor
             {
                 // World/Local 空间模式开关（放在路径点列表上方）
                 float labelW = EditorGUIUtility.labelWidth;
-                EditorGUI.LabelField(MakeRect(x, y, labelW, lineH), "Local Space");
-                useLocalProp.boolValue = EditorGUI.Toggle(MakeRect(x + labelW, y, 20f, lineH), useLocalProp.boolValue);
+                EditorGUI.LabelField(MakeRect(x, y, labelW, lineH), "World Space");
+                useWorldProp.boolValue = EditorGUI.Toggle(MakeRect(x + labelW, y, 20f, lineH), useWorldProp.boolValue);
                 y += lineH + gap;
 
                 // Path 专用：路径点列表

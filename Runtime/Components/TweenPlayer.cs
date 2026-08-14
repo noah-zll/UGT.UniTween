@@ -295,7 +295,7 @@ namespace UGT.UniTween.Components
             Vector3 to = clip.ToValue;
             if (clip.ValueMode == TweenValueMode.Relative)
             {
-                Vector3 positionBase = clip.UseLocal ? target.localPosition : target.position;
+                Vector3 positionBase = clip.UseWorld ? target.position : target.localPosition;
                 switch (clip.PropertyType)
                 {
                     case TweenPropertyType.Position:
@@ -330,16 +330,16 @@ namespace UGT.UniTween.Components
 
             switch (clip.PropertyType)
             {
-                case TweenPropertyType.Position: return clip.UseLocal ? target.DoLocalMove(to, duration) : target.DoMove(to, duration);
-                case TweenPropertyType.PositionX: return clip.UseLocal ? target.DoLocalMoveX(to.x, duration) : target.DoMoveX(to.x, duration);
-                case TweenPropertyType.PositionY: return clip.UseLocal ? target.DoLocalMoveY(to.y, duration) : target.DoMoveY(to.y, duration);
-                case TweenPropertyType.PositionZ: return clip.UseLocal ? target.DoLocalMoveZ(to.z, duration) : target.DoMoveZ(to.z, duration);
+                case TweenPropertyType.Position: return clip.UseWorld ? target.DoMove(to, duration) : target.DoLocalMove(to, duration);
+                case TweenPropertyType.PositionX: return clip.UseWorld ? target.DoMoveX(to.x, duration) : target.DoLocalMoveX(to.x, duration);
+                case TweenPropertyType.PositionY: return clip.UseWorld ? target.DoMoveY(to.y, duration) : target.DoLocalMoveY(to.y, duration);
+                case TweenPropertyType.PositionZ: return clip.UseWorld ? target.DoMoveZ(to.z, duration) : target.DoLocalMoveZ(to.z, duration);
                 case TweenPropertyType.Rotation: return target.DoRotate(to, duration);
                 case TweenPropertyType.Scale: return target.DoScale(to, duration);
                 case TweenPropertyType.ScaleX: return target.DoScaleX(to.x, duration);
                 case TweenPropertyType.ScaleY: return target.DoScaleY(to.y, duration);
                 case TweenPropertyType.ScaleZ: return target.DoScaleZ(to.z, duration);
-                case TweenPropertyType.Path: return target.DoPath(clip.PathPoints, duration, clip.UseLocal);
+                case TweenPropertyType.Path: return target.DoPath(clip.PathPoints, duration, !clip.UseWorld);
             }
 
             return null;
@@ -548,27 +548,27 @@ namespace UGT.UniTween.Components
             switch (clip.PropertyType)
             {
                 case TweenPropertyType.Position:
-                    if (clip.UseLocal) target.localPosition = f; else target.position = f;
+                    if (clip.UseWorld) target.position = f; else target.localPosition = f;
                     break;
                 case TweenPropertyType.PositionX:
                     {
-                        var p = clip.UseLocal ? target.localPosition : target.position;
+                        var p = clip.UseWorld ? target.position : target.localPosition;
                         p.x = f.x;
-                        if (clip.UseLocal) target.localPosition = p; else target.position = p;
+                        if (clip.UseWorld) target.position = p; else target.localPosition = p;
                     }
                     break;
                 case TweenPropertyType.PositionY:
                     {
-                        var p = clip.UseLocal ? target.localPosition : target.position;
+                        var p = clip.UseWorld ? target.position : target.localPosition;
                         p.y = f.y;
-                        if (clip.UseLocal) target.localPosition = p; else target.position = p;
+                        if (clip.UseWorld) target.position = p; else target.localPosition = p;
                     }
                     break;
                 case TweenPropertyType.PositionZ:
                     {
-                        var p = clip.UseLocal ? target.localPosition : target.position;
+                        var p = clip.UseWorld ? target.position : target.localPosition;
                         p.z = f.z;
-                        if (clip.UseLocal) target.localPosition = p; else target.position = p;
+                        if (clip.UseWorld) target.position = p; else target.localPosition = p;
                     }
                     break;
                 case TweenPropertyType.Rotation: target.eulerAngles = f; break;

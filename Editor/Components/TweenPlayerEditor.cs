@@ -162,15 +162,15 @@ namespace UGT.UniTween.Editor
                     if (propType != TweenPropertyType.Path) continue;
 
                     var pathPointsProp = clip.FindPropertyRelative("PathPoints");
-                    bool useLocal = clip.FindPropertyRelative("UseLocal").boolValue;
-                    DrawPath(pathPointsProp, target, useLocal);
+                    bool useWorld = clip.FindPropertyRelative("UseWorld").boolValue;
+                    DrawPath(pathPointsProp, target, useWorld);
                 }
             }
 
             serializedObject.ApplyModifiedProperties();
         }
 
-        private void DrawPath(SerializedProperty pathPointsProp, Transform target, bool useLocal)
+        private void DrawPath(SerializedProperty pathPointsProp, Transform target, bool useWorld)
         {
             int count = pathPointsProp.arraySize;
             if (count < 2) return;
@@ -181,10 +181,10 @@ namespace UGT.UniTween.Editor
                 points[i] = pathPointsProp.GetArrayElementAtIndex(i).vector3Value;
             }
 
-            // Local 模式下，路径点以目标局部坐标存储，需转换到世界空间用于显示与编辑。
-            bool toWorld = useLocal && target != null;
-            Quaternion handleRotation = toWorld ? target.rotation : Quaternion.identity;
-            if (toWorld)
+            // 局部模式（默认）下，路径点以目标局部坐标存储，需转换到世界空间用于显示与编辑。
+            bool localToWorld = !useWorld && target != null;
+            Quaternion handleRotation = localToWorld ? target.rotation : Quaternion.identity;
+            if (localToWorld)
             {
                 for (int i = 0; i < count; i++)
                     points[i] = target.TransformPoint(points[i]);
@@ -199,7 +199,7 @@ namespace UGT.UniTween.Editor
                 Vector3 newPos = Handles.PositionHandle(points[i], handleRotation);
                 if (EditorGUI.EndChangeCheck())
                 {
-                    Vector3 stored = toWorld ? target.InverseTransformPoint(newPos) : newPos;
+                    Vector3 stored = localToWorld ? target.InverseTransformPoint(newPos) : newPos;
                     pathPointsProp.GetArrayElementAtIndex(i).vector3Value = stored;
                     points[i] = newPos;
                 }

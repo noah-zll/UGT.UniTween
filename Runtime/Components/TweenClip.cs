@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace UGT.UniTween.Components
 {
@@ -43,9 +42,8 @@ namespace UGT.UniTween.Components
         [Tooltip("是否指定起始值")]
         public bool UseFrom;
 
-        [Tooltip("使用局部坐标（Position 系列 / Path 时使用）")]
-        [FormerlySerializedAs("UseLocalPath")]
-        public bool UseLocal = true;
+        [Tooltip("使用世界坐标（Position 系列 / Path 时使用，勾选即世界坐标，默认局部坐标）")]
+        public bool UseWorld;
 
         [Tooltip("是否使用独立时间缩放")]
         public bool CustomTimeScale;
