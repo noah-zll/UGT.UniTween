@@ -296,6 +296,7 @@ namespace UGT.UniTween.Components
             if (clip.ValueMode == TweenValueMode.Relative)
             {
                 Vector3 positionBase = clip.UseWorld ? target.position : target.localPosition;
+                Vector3 rotationBase = clip.UseWorld ? target.eulerAngles : target.localEulerAngles;
                 switch (clip.PropertyType)
                 {
                     case TweenPropertyType.Position:
@@ -323,7 +324,16 @@ namespace UGT.UniTween.Components
                         to.z = target.localScale.z + clip.ToValue.z;
                         break;
                     case TweenPropertyType.Rotation:
-                        to = target.eulerAngles + (Vector3)clip.ToValue;
+                        to = rotationBase + (Vector3)clip.ToValue;
+                        break;
+                    case TweenPropertyType.RotationX:
+                        to.x = rotationBase.x + clip.ToValue.x;
+                        break;
+                    case TweenPropertyType.RotationY:
+                        to.y = rotationBase.y + clip.ToValue.y;
+                        break;
+                    case TweenPropertyType.RotationZ:
+                        to.z = rotationBase.z + clip.ToValue.z;
                         break;
                 }
             }
@@ -334,7 +344,10 @@ namespace UGT.UniTween.Components
                 case TweenPropertyType.PositionX: return clip.UseWorld ? target.DoMoveX(to.x, duration) : target.DoLocalMoveX(to.x, duration);
                 case TweenPropertyType.PositionY: return clip.UseWorld ? target.DoMoveY(to.y, duration) : target.DoLocalMoveY(to.y, duration);
                 case TweenPropertyType.PositionZ: return clip.UseWorld ? target.DoMoveZ(to.z, duration) : target.DoLocalMoveZ(to.z, duration);
-                case TweenPropertyType.Rotation: return target.DoRotate(to, duration);
+                case TweenPropertyType.Rotation: return clip.UseWorld ? target.DoRotate(to, duration) : target.DoLocalRotate(to, duration);
+                case TweenPropertyType.RotationX: return clip.UseWorld ? target.DoRotateX(to.x, duration) : target.DoLocalRotateX(to.x, duration);
+                case TweenPropertyType.RotationY: return clip.UseWorld ? target.DoRotateY(to.y, duration) : target.DoLocalRotateY(to.y, duration);
+                case TweenPropertyType.RotationZ: return clip.UseWorld ? target.DoRotateZ(to.z, duration) : target.DoLocalRotateZ(to.z, duration);
                 case TweenPropertyType.Scale: return target.DoScale(to, duration);
                 case TweenPropertyType.ScaleX: return target.DoScaleX(to.x, duration);
                 case TweenPropertyType.ScaleY: return target.DoScaleY(to.y, duration);
@@ -571,7 +584,30 @@ namespace UGT.UniTween.Components
                         if (clip.UseWorld) target.position = p; else target.localPosition = p;
                     }
                     break;
-                case TweenPropertyType.Rotation: target.eulerAngles = f; break;
+                case TweenPropertyType.Rotation:
+                    if (clip.UseWorld) target.eulerAngles = f; else target.localEulerAngles = f;
+                    break;
+                case TweenPropertyType.RotationX:
+                    {
+                        var e = clip.UseWorld ? target.eulerAngles : target.localEulerAngles;
+                        e.x = f.x;
+                        if (clip.UseWorld) target.eulerAngles = e; else target.localEulerAngles = e;
+                    }
+                    break;
+                case TweenPropertyType.RotationY:
+                    {
+                        var e = clip.UseWorld ? target.eulerAngles : target.localEulerAngles;
+                        e.y = f.y;
+                        if (clip.UseWorld) target.eulerAngles = e; else target.localEulerAngles = e;
+                    }
+                    break;
+                case TweenPropertyType.RotationZ:
+                    {
+                        var e = clip.UseWorld ? target.eulerAngles : target.localEulerAngles;
+                        e.z = f.z;
+                        if (clip.UseWorld) target.eulerAngles = e; else target.localEulerAngles = e;
+                    }
+                    break;
                 case TweenPropertyType.Scale: target.localScale = f; break;
                 case TweenPropertyType.ScaleX: { var s = target.localScale; s.x = f.x; target.localScale = s; } break;
                 case TweenPropertyType.ScaleY: { var s = target.localScale; s.y = f.y; target.localScale = s; } break;

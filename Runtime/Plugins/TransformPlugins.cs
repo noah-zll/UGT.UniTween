@@ -207,6 +207,142 @@ namespace UGT.UniTween.Plugins
             return tween;
         }
 
+        public static Tween DoLocalRotate(this Transform target, Vector3 to, float duration)
+        {
+            var tween = TweenEngine.Instance.GetTween();
+            tween.Duration = duration;
+
+            Vector3 from = target.localEulerAngles;
+            tween.OnStart = () => { from = target.localEulerAngles; };
+            tween.OnUpdate = (t) =>
+            {
+                if (target != null)
+                    target.localEulerAngles = Vector3.LerpUnclamped(from, to, t);
+            };
+
+            return tween;
+        }
+
+        public static Tween DoRotateX(this Transform target, float to, float duration)
+        {
+            var tween = TweenEngine.Instance.GetTween();
+            tween.Duration = duration;
+
+            float from = target.eulerAngles.x;
+            tween.OnStart = () => { from = target.eulerAngles.x; };
+            tween.OnUpdate = (t) =>
+            {
+                if (target != null)
+                {
+                    var e = target.eulerAngles;
+                    e.x = Mathf.LerpUnclamped(from, to, t);
+                    target.eulerAngles = e;
+                }
+            };
+
+            return tween;
+        }
+
+        public static Tween DoRotateY(this Transform target, float to, float duration)
+        {
+            var tween = TweenEngine.Instance.GetTween();
+            tween.Duration = duration;
+
+            float from = target.eulerAngles.y;
+            tween.OnStart = () => { from = target.eulerAngles.y; };
+            tween.OnUpdate = (t) =>
+            {
+                if (target != null)
+                {
+                    var e = target.eulerAngles;
+                    e.y = Mathf.LerpUnclamped(from, to, t);
+                    target.eulerAngles = e;
+                }
+            };
+
+            return tween;
+        }
+
+        public static Tween DoRotateZ(this Transform target, float to, float duration)
+        {
+            var tween = TweenEngine.Instance.GetTween();
+            tween.Duration = duration;
+
+            float from = target.eulerAngles.z;
+            tween.OnStart = () => { from = target.eulerAngles.z; };
+            tween.OnUpdate = (t) =>
+            {
+                if (target != null)
+                {
+                    var e = target.eulerAngles;
+                    e.z = Mathf.LerpUnclamped(from, to, t);
+                    target.eulerAngles = e;
+                }
+            };
+
+            return tween;
+        }
+
+        public static Tween DoLocalRotateX(this Transform target, float to, float duration)
+        {
+            var tween = TweenEngine.Instance.GetTween();
+            tween.Duration = duration;
+
+            float from = target.localEulerAngles.x;
+            tween.OnStart = () => { from = target.localEulerAngles.x; };
+            tween.OnUpdate = (t) =>
+            {
+                if (target != null)
+                {
+                    var e = target.localEulerAngles;
+                    e.x = Mathf.LerpUnclamped(from, to, t);
+                    target.localEulerAngles = e;
+                }
+            };
+
+            return tween;
+        }
+
+        public static Tween DoLocalRotateY(this Transform target, float to, float duration)
+        {
+            var tween = TweenEngine.Instance.GetTween();
+            tween.Duration = duration;
+
+            float from = target.localEulerAngles.y;
+            tween.OnStart = () => { from = target.localEulerAngles.y; };
+            tween.OnUpdate = (t) =>
+            {
+                if (target != null)
+                {
+                    var e = target.localEulerAngles;
+                    e.y = Mathf.LerpUnclamped(from, to, t);
+                    target.localEulerAngles = e;
+                }
+            };
+
+            return tween;
+        }
+
+        public static Tween DoLocalRotateZ(this Transform target, float to, float duration)
+        {
+            var tween = TweenEngine.Instance.GetTween();
+            tween.Duration = duration;
+
+            float from = target.localEulerAngles.z;
+            tween.OnStart = () => { from = target.localEulerAngles.z; };
+            tween.OnUpdate = (t) =>
+            {
+                if (target != null)
+                {
+                    var e = target.localEulerAngles;
+                    e.z = Mathf.LerpUnclamped(from, to, t);
+                    target.localEulerAngles = e;
+                }
+            };
+
+            return tween;
+        }
+
         public static Tween DoScale(this Transform target, Vector3 to, float duration)
         {
             var tween = TweenEngine.Instance.GetTween();

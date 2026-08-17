@@ -44,7 +44,7 @@ namespace UGT.UniTween.Editor
             if (needsValueMode) lines++;
             if (!isBool && !isSpriteSeq && !isPath) lines++; // From 行
             if (isPath) lines++; // World/Local 开关行
-            if (IsPositionType(propType)) lines++; // Position World/Local 开关行
+            if (NeedsWorldToggle(propType)) lines++; // World/Local 开关行
             if (showCurve) lines++;
 
             return (lineH + gap) * (lines + 1) + extraHeight;
@@ -150,8 +150,8 @@ namespace UGT.UniTween.Editor
                 y += lineH + gap;
             }
 
-            // Row 9: Position World/Local 开关
-            if (IsPositionType(propType))
+            // Row 9: World/Local 开关（Position / Rotation 系列）
+            if (NeedsWorldToggle(propType))
             {
                 float labelW = EditorGUIUtility.labelWidth;
                 EditorGUI.LabelField(MakeRect(x, y, labelW, lineH), "World Space");
@@ -223,7 +223,8 @@ namespace UGT.UniTween.Editor
         {
             // Transform
             new[] { TweenPropertyType.Position, TweenPropertyType.PositionX, TweenPropertyType.PositionY, TweenPropertyType.PositionZ,
-                    TweenPropertyType.Rotation, TweenPropertyType.Scale, TweenPropertyType.ScaleX, TweenPropertyType.ScaleY, TweenPropertyType.ScaleZ,
+                    TweenPropertyType.Rotation, TweenPropertyType.RotationX, TweenPropertyType.RotationY, TweenPropertyType.RotationZ,
+                    TweenPropertyType.Scale, TweenPropertyType.ScaleX, TweenPropertyType.ScaleY, TweenPropertyType.ScaleZ,
                     TweenPropertyType.Path },
             // RectTransform
             new[] { TweenPropertyType.AnchorPosition, TweenPropertyType.AnchorMin, TweenPropertyType.AnchorMax,
@@ -276,12 +277,16 @@ namespace UGT.UniTween.Editor
             return type == TweenPropertyType.FlipX || type == TweenPropertyType.FlipY;
         }
 
-        private static bool IsPositionType(TweenPropertyType type)
+        private static bool NeedsWorldToggle(TweenPropertyType type)
         {
             return type == TweenPropertyType.Position ||
                    type == TweenPropertyType.PositionX ||
                    type == TweenPropertyType.PositionY ||
-                   type == TweenPropertyType.PositionZ;
+                   type == TweenPropertyType.PositionZ ||
+                   type == TweenPropertyType.Rotation ||
+                   type == TweenPropertyType.RotationX ||
+                   type == TweenPropertyType.RotationY ||
+                   type == TweenPropertyType.RotationZ;
         }
 
         private static bool NeedsValueMode(TweenPropertyType type)

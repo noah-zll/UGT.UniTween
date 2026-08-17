@@ -16,6 +16,8 @@ namespace UGT.UniTween.Editor
         private SerializedProperty _poolCapacityProp;
         private SerializedProperty _spawnAsChildProp;
         private SerializedProperty _randomOffsetProp;
+        private SerializedProperty _useIndependentTimeScaleProp;
+        private SerializedProperty _timeScaleProp;
 
         private void OnEnable()
         {
@@ -28,6 +30,8 @@ namespace UGT.UniTween.Editor
             _poolCapacityProp = serializedObject.FindProperty("_poolCapacity");
             _spawnAsChildProp = serializedObject.FindProperty("_spawnAsChild");
             _randomOffsetProp = serializedObject.FindProperty("_randomOffset");
+            _useIndependentTimeScaleProp = serializedObject.FindProperty("_useIndependentTimeScale");
+            _timeScaleProp = serializedObject.FindProperty("_timeScale");
         }
 
         public override void OnInspectorGUI()
@@ -47,6 +51,17 @@ namespace UGT.UniTween.Editor
             {
                 EditorGUILayout.PropertyField(_spawnIntervalProp);
                 EditorGUILayout.PropertyField(_poolCapacityProp);
+
+                EditorGUILayout.Space(2f);
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    EditorGUILayout.LabelField("Independent Time Scale", GUILayout.Width(EditorGUIUtility.labelWidth));
+                    _useIndependentTimeScaleProp.boolValue = EditorGUILayout.Toggle(_useIndependentTimeScaleProp.boolValue, GUILayout.Width(20f));
+                    if (_useIndependentTimeScaleProp.boolValue)
+                    {
+                        EditorGUILayout.PropertyField(_timeScaleProp, GUIContent.none);
+                    }
+                }
             }
 
             EditorGUILayout.Space(4f);

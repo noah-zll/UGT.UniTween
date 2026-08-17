@@ -37,6 +37,12 @@ namespace UGT.UniTween.Components
         [Tooltip("对象池初始容量")]
         [SerializeField] private int _poolCapacity = 10;
 
+        [Header("时间缩放")]
+        [Tooltip("是否使用独立时间缩放（忽略全局）")]
+        [SerializeField] private bool _useIndependentTimeScale = false;
+        [Tooltip("独立时间缩放（启用时生效，1=正常，0.5=半速）")]
+        [SerializeField] private float _timeScale = 1f;
+
         [Header("布局")]
         [Tooltip("生成的实例是否作为当前对象的子节点")]
         [SerializeField] private bool _spawnAsChild = true;
@@ -78,7 +84,8 @@ namespace UGT.UniTween.Components
         {
             if (!_isLooping) return;
 
-            _timer += Time.deltaTime;
+            float deltaTime = Time.deltaTime * (_useIndependentTimeScale ? _timeScale : UniTween.TimeScale);
+            _timer += deltaTime;
             if (_timer >= _spawnInterval)
             {
                 _timer -= _spawnInterval;
